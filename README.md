@@ -62,12 +62,13 @@ Early detection is crucial, and **CareBloom** helps in identifying Pre-eclampsia
 
 Customized messages are automatically sent to patients or doctors through **Twilio WhatsApp API**, based on the pregnancy risk level.
 
-📞 WhatsApp Connection Setup
+## 📞 WhatsApp Connection Setup
 
 Before receiving alerts, users must connect to the CareBloom WhatsApp Alert Service by following these steps:
 
-**Join the Twilio WhatsApp Sandbox**
-To activate alert messaging, send this message on WhatsApp:
+Join the Twilio WhatsApp Sandbox
+
+To activate alert messaging, send this message on WhatsApp:/n
 **join guide-being**
 to this number:
 +1 415 523 8886
