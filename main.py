@@ -17,12 +17,16 @@ app = FastAPI(title="Pregnancy Risk API with WhatsApp Alerts & AI Advice")
 # Load Models and Scalers
 # ===========================
 try:
-    model_a = joblib.load("model_a.joblib")
-    model_b = joblib.load("model_b.joblib")
-    scaler_a = joblib.load("scaler_model_a.joblib")
-    scaler_b = joblib.load("scaler_model_b.joblib")
+        model_a = joblib.load(r"C:\Users\Acer\Desktop\CareBloom\save_models\model_a.joblib")
+        model_b = joblib.load(r"C:\Users\Acer\Desktop\CareBloom\save_models\model_b.joblib")
+        scaler_a = joblib.load(r"C:\Users\Acer\Desktop\CareBloom\save_models\scaler_model_a.joblib")
+        scaler_b = joblib.load(r"C:\Users\Acer\Desktop\CareBloom\save_models\scaler_model_b.joblib")
+
+        print("✅ Models and scalers loaded successfully!")
+
 except Exception as e:
-    raise RuntimeError(f"❌ Failed to load models or scalers: {e}")
+        print("❌ Error loading models:", e)
+
 
 # ===========================
 # Twilio Config
