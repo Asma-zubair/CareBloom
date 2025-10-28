@@ -80,7 +80,7 @@ to this number:
 On the CareBloom frontend, enter your WhatsApp number (including the country code, e.g., +923XXXXXXXXX).
 
 Click “Send Message”
-Once joined, click the Send Message button to receive alerts directly on WhatsApp for high-risk predictions.
+Once joined, click the Send Message button to receive alerts directly on WhatsApp according to prediction.
 
 ---
 
