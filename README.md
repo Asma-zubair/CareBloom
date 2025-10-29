@@ -101,7 +101,8 @@ Once joined, click the Send Message button to receive alerts directly on WhatsAp
 
 ## Workflow Diagram 
 
-'''👩‍🍼 User Input (Age, BP, Heart Rate, etc.) + Phone Number
+```
+👩‍🍼 User Input (Age, BP, Heart Rate, etc.) + Phone Number
         ↓
 📊 Model A (Pregnancy Risk Prediction - XGBoost)
         ↓
@@ -119,7 +120,9 @@ Once joined, click the Send Message button to receive alerts directly on WhatsAp
         ↓
 📨 WhatsApp Alert Sent to Entered Number (Based on Model A Output)
         ↓
-🌸 Result Dashboard (React Frontend)'''
+🌸 Result Dashboard (React Frontend)
+```
+
 
 
 
