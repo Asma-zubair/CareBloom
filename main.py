@@ -212,6 +212,12 @@ async def api_send_alert(data: AlertRequest):
         return JSONResponse(content={"message": "WhatsApp Alert Sent", "sid": sid})
     except Exception as e:
         return JSONResponse(content={"error": str(e)}, status_code=500)
+# =======================
+# Health Check Endpoint (for Render)
+# =======================
+@app.get("/healthz")
+def health_check():
+    return {"status": "ok"}
 
 
 
