@@ -123,6 +123,11 @@ Once joined, click the Send Message button to receive alerts directly on WhatsAp
 🌸 Result Dashboard (React Frontend)
 ```
 
+---
+
+## 💡 Our Mission
+To revolutionize maternal health by combining the power of **AI prediction**, **real-time communication**, and **human-centered design** — ensuring that every mother receives the right care at the right time.
+
 
 
 
