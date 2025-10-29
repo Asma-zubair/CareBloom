@@ -84,3 +84,43 @@ Once joined, click the Send Message button to receive alerts directly on WhatsAp
 
 ---
 
+## ⚙️ Tech Stack
+
+| Component | Technology Used |
+|------------|------------------|
+| **Frontend (UI)** | React.js |
+| **Backend (API)** | FastAPI |
+| **AI Models** | Scikit-learn (XGBoost, Random Forest) |
+| **AI Advice Generation** | Groq API – LLaMA 3.1 8B Instant |
+| **Messaging Service** | Twilio WhatsApp API |
+| **Model Storage** | Joblib |
+| **Version Control** | Git & GitHub |
+| **Programming Language** | Python (Backend), JavaScript (Frontend) |
+| **Data Handling** | Pandas, NumPy |
+
+
+## Workflow Diagram 
+
+👩‍🍼 User Input (Age, BP, Heart Rate, etc.) + Phone Number
+        ↓
+📊 Model A (Pregnancy Risk Prediction - XGBoost)
+        ↓
+🔍 Output: Low / Medium / High Risk
+        ↓
+➡️ If High → Activate Model B
+        ↓
+🧠 Model B (Pre-eclampsia Detection - Random Forest)
+        ↓
+📈 Output: Disease Risk (Low / Medium / High) + Probability (%)
+        ↓
+💬 Groq API (LLaMA 3.1 8B) → Generates Medical Advice
+        ↓
+📱 "Send Message" Button Clicked (Optional by User)
+        ↓
+📨 WhatsApp Alert Sent to Entered Number (Based on Model A Output)
+        ↓
+🌸 Result Dashboard (React Frontend)
+
+
+
+
