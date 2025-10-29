@@ -1,4 +1,4 @@
-# 🌸 CareBloom – AI-Powered Pregnancy Risk & Disease Prediction System
+# 🌸 CareBloom – AI-Powered Pregnancy Risk & Disease Assessment System
 
 🤰 **CareBloom** is an intelligent maternal health assistant that predicts pregnancy risk, detects **Pre-eclampsia**, and provides instant **AI-powered medical advice** with **WhatsApp alerts** for critical cases.
 
