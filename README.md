@@ -16,7 +16,7 @@ By combining **predictive AI** with **real-time communication**, CareBloom empow
 
 ---
 
-## 🧠 System Intelligence
+## 🧠 Features
 
 ### 🧩 Model A – Pregnancy Risk Prediction
 - **Dataset:** Kaggle – Maternal Health Risk Dataset  
