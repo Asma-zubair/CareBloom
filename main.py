@@ -67,6 +67,9 @@ groq_client = Groq(api_key=GROQ_API_KEY)
 # =======================
 # Request Models
 # =======================
+# =======================
+# Request Models
+# =======================
 class PredictionRequest(BaseModel):
     Age: float
     SystolicBP: float
@@ -78,7 +81,6 @@ class PredictionRequest(BaseModel):
     gravida: float
     parity: float
     gestational_age_weeks: float
-    Age_yrs: float
     BMI: float
     diabetes: int
     hypertension: int
@@ -86,6 +88,7 @@ class PredictionRequest(BaseModel):
     fetal_weight: float
     Protien_Uria: int
     amniotic_fluid_levels: float
+
 
 
 class AlertRequest(BaseModel):
@@ -178,11 +181,12 @@ async def api_predict(data: PredictionRequest):
                 "diabetes", "History of hypertension (y/n)", "Systolic BP", "Diastolic BP",
                 "HB", "fetal weight(kgs)", "Protien Uria", "amniotic fluid levels(cm)"
             ]
-            x_b = pd.DataFrame([[
-                data.gravida, data.parity, data.gestational_age_weeks, data.Age_yrs, data.BMI,
+            x_b = pd.DataFrame([[ 
+                data.gravida, data.parity, data.gestational_age_weeks, data.Age, data.BMI,
                 data.diabetes, data.hypertension, data.SystolicBP, data.DiastolicBP,
                 data.HB, data.fetal_weight, data.Protien_Uria, data.amniotic_fluid_levels
             ]], columns=FEATURES_B)
+
 
             x_b_scaled = scaler_b.transform(x_b)
             disease_pred = int(model_b.predict(x_b_scaled)[0])
