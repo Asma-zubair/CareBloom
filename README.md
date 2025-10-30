@@ -97,6 +97,7 @@ Once joined, click the Send Message button to receive alerts directly on WhatsAp
 | **Version Control** | Git & GitHub |
 | **Programming Language** | Python (Backend), JavaScript (Frontend) |
 | **Data Handling** | Pandas, NumPy |
+| **Deployment** | Versel, Render |
 
 
 ## Workflow Diagram 
