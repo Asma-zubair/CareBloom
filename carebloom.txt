@@ -1,0 +1,71 @@
+## Inspiration
+
+We wanted to build something that blends AI and empathy — a smart health companion that supports women during pregnancy by predicting potential risks early and sending timely alerts. The idea was to make healthcare more accessible and proactive using intelligent technology.
+
+## What it does
+
+CareBloom is an AI-powered health assistant that:
+
+Takes user input to predict pregnancy risk (Low / Medium / High).
+
+If the risk is High, it automatically activates Model B, which checks for Preeclampsia — a serious condition causing organ damage after 20 weeks of pregnancy.
+
+Displays both risk level and probability percentage for better clarity.
+
+Allows users to enter a WhatsApp number and sends automatic alert messages to doctors, family members, or caretakers via Twilio WhatsApp API.
+
+Uses Groq AI to provide personalized health advice based on the results.
+
+## How we built it
+
+Frontend: React.js, Tailwind CSS (deployed on Vercel)
+
+Backend: FastAPI(deployed on Render )
+
+AI Models:
+
+Model A – Predicts general pregnancy risk
+
+Model B – Detects Preeclampsia risk and probability
+
+Libraries: Scikit-learn, Pandas, NumPy
+
+APIs: Twilio WhatsApp API (alerts), Groq API (AI health advice)
+
+
+## Challenges we ran into
+
+Creating a multi-model prediction pipeline that activates dynamically
+
+Deploying and connecting FastAPI backend with React frontend
+
+Managing Twilio authentication and WhatsApp message delivery
+
+Generating realistic AI health advice while maintaining accuracy and clarity
+
+## Accomplishments that we're proud of
+
+Built a dual-model AI system that predicts both general and specific pregnancy risks
+
+Successfully integrated real-time WhatsApp alerts and AI-based guidance
+
+Designed a clean and user-friendly interface for effortless interaction
+
+Deployed a fully functional end-to-end AI healthcare web app
+
+## What we learned
+
+Building connected AI systems with FastAPI and React
+
+Integrating multiple models within one prediction pipeline
+
+Handling API-based automation (Twilio, Groq)
+
+
+## What's next for CareBloom
+
+Expanding detection to include gestational diabetes and anemia
+
+Creating a mobile app version for easier access
+
+Enhancing AI advice with medical language models

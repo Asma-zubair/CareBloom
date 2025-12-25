@@ -8,6 +8,7 @@ import joblib
 import pandas as pd
 import numpy as np
 import os
+import json
 from dotenv import load_dotenv
 
 # =======================
@@ -94,52 +95,157 @@ class PredictionRequest(BaseModel):
 class AlertRequest(BaseModel):
     Risk_Level: str
     phone_number: str
+    user_type: str | None = "patient"  # "patient" or "doctor"
+
+
+class ChatRequest(BaseModel):
+    user_type: str  # "patient" or "doctor"
+    mode: str  # "advice" or "plan"
+    question: str | None = None
+    risk_level: str | None = None
+    disease_status: str | None = None
 
 
 # =======================
-# AI Advice Generator (Groq)
+# Personalized Health Plan Generator (Groq)
 # =======================
-def generate_advice(risk_level: str, disease_status: str):
+def generate_health_plan(risk_level: str, disease_status: str):
+    """Generate a structured health plan using Groq.
+
+    Returns a dict with keys:
+    - diet_suggestions: list[str]
+    - rest_hydration_plan: list[str]
+    - weekly_checkup_reminders: list[str]
+    """
+
     prompt = f"""
 You are a professional pregnancy health assistant.
 Based on these conditions:
 - Pregnancy Risk Level: {risk_level}
 - Disease Status: {disease_status}
 
-Give a short, clear, and empathetic medical advice (2–4 sentences)
-for the patient, including recommendations or precautions.
-Avoid technical words. Example tone:
-'You are doing great! Keep up healthy habits and attend regular checkups.'
+Generate a structured, personalized pregnancy care plan in strict JSON with this schema:
+
+{{
+  "diet_suggestions": [
+    "short, specific pregnancy-safe diet tip 1",
+    "short, specific pregnancy-safe diet tip 2",
+    "short, specific pregnancy-safe diet tip 3"
+  ],
+  "rest_hydration_plan": [
+    "short, specific tip about rest or sleep",
+    "short, specific tip about hydration",
+    "short, specific tip about stress management or breaks"
+  ],
+  "weekly_checkup_reminders": [
+    "short, specific reminder about medical checkups or monitoring",
+    "short, specific reminder about warning signs to watch",
+    "short, specific reminder about when to contact a doctor"
+  ]
+}}
+
+Rules:
+- Return ONLY valid JSON, no backticks, no extra text.
+- Each list must contain 3–5 items.
+- Use simple, empathetic language without medical jargon.
+- Do not mention that you are an AI.
 """
+
     try:
         response = groq_client.chat.completions.create(
             model="llama-3.1-8b-instant",
             messages=[{"role": "user", "content": prompt}],
-            temperature=0.7,
-            max_tokens=120
+            temperature=0.4,
+            max_tokens=300,
         )
-        return response.choices[0].message.content.strip()
+
+        raw_content = response.choices[0].message.content.strip()
+
+        # Try to parse JSON from the model output
+        plan = json.loads(raw_content)
+
+        # Basic normalization/validation
+        return {
+            "diet_suggestions": list(plan.get("diet_suggestions", [])),
+            "rest_hydration_plan": list(plan.get("rest_hydration_plan", [])),
+            "weekly_checkup_reminders": list(plan.get("weekly_checkup_reminders", [])),
+        }
     except Exception as e:
-        return f"⚠️ Failed to generate advice: {e}"
+        # Fallback: return a safe, generic plan
+        print("⚠️ Failed to generate structured health plan:", e)
+        return {
+            "diet_suggestions": [
+                "Eat balanced meals with fruits, vegetables, whole grains, and lean protein.",
+                "Avoid very salty, fried, or highly processed foods when possible.",
+                "Have smaller, frequent meals if you feel nauseous or uncomfortable.",
+            ],
+            "rest_hydration_plan": [
+                "Aim for regular sleep and short rest breaks during the day.",
+                "Drink water regularly throughout the day to stay hydrated.",
+                "Avoid long periods of standing or heavy physical strain without breaks.",
+            ],
+            "weekly_checkup_reminders": [
+                "Follow your doctor’s schedule for prenatal visits and tests.",
+                "Note any new symptoms like severe headache, vision changes, or strong pain and share them with your doctor.",
+                "If you feel something is not right, contact your healthcare provider rather than waiting for the next visit.",
+            ],
+        }
 
 
 # =======================
 # WhatsApp Alert Function (Twilio)
 # =======================
-def send_whatsapp_alert(risk_level: str, phone_number: str = None):
+def send_whatsapp_alert(risk_level: str, phone_number: str = None, user_type: str | None = "patient"):
     if not client:
         print("⚠ Twilio client not configured. Alert not sent.")
         return None
 
     target_number = f"whatsapp:{phone_number}" if phone_number else TO_NUMBER
-    print(f"📱 Sending WhatsApp alert for {risk_level} to {target_number}")
+    recipient = (user_type or "patient").lower()
 
-    if risk_level == "high risk":
-        body = "🚨 *High Risk Alert!* Please contact your doctor immediately for a detailed checkup."
-    elif risk_level == "mid risk":
-        body = "⚠ *Warning:* Your pregnancy shows moderate risk. Take care and schedule a medical check soon."
+    print(f"📱 Sending WhatsApp alert for {risk_level} to {target_number} as {recipient}")
+
+    # Customize message content based on recipient type and risk level
+    if recipient == "doctor":
+        if risk_level == "high risk":
+            body = (
+                "🚨 *High Risk Case Alert*\n"
+                "The attached assessment indicates a high pregnancy risk. "
+                "Please review the patient's blood pressure, labs, and symptoms as soon as possible "
+                "and decide on further management."
+            )
+        elif risk_level == "mid risk":
+            body = (
+                "⚠ *Moderate Risk Case*\n"
+                "The recent assessment suggests a moderate pregnancy risk. "
+                "Kindly consider closer follow-up, monitoring, and any additional tests you find appropriate."
+            )
+        else:
+            body = (
+                "✅ *Low Risk Case*\n"
+                "The assessment currently indicates a low pregnancy risk. "
+                "Please continue routine follow-up according to your usual practice."
+            )
     else:
-        body = "✅ *Safe:* Your pregnancy risk is low. Keep following a healthy lifestyle!"
+        # Default: patient-facing, simple and supportive
+        if risk_level == "high risk":
+            body = (
+                "🚨 *High Risk Alert*\n"
+                "Your assessment shows a higher pregnancy risk. "
+                "Please contact your doctor or clinic as soon as you can for a full checkup."
+            )
+        elif risk_level == "mid risk":
+            body = (
+                "⚠ *Moderate Risk Alert*\n"
+                "Your assessment suggests some warning signs. "
+                "Take extra care of your rest, diet, and blood pressure, and book a checkup with your doctor soon."
+            )
+        else:
+            body = (
+                "✅ *Low Risk*\n"
+                "Your assessment looks low risk right now. "
+                "Keep following healthy habits, drinking water, and attending your regular checkups."
+            )
 
     try:
         message = client.messages.create(
@@ -199,9 +305,9 @@ async def api_predict(data: PredictionRequest):
         else:
             result.update({"Disease_Status": "N/A", "Disease_Probability": "0%"})
 
-        # --- AI Advice (Groq) ---
-        advice = generate_advice(result["Risk_Level"], result["Disease_Status"])
-        result["AI_Advice"] = advice
+        # --- Personalized Health Plan (Groq) ---
+        health_plan = generate_health_plan(result["Risk_Level"], result["Disease_Status"])
+        result["Health_Plan"] = health_plan
 
         return JSONResponse(content=result)
 
@@ -212,8 +318,84 @@ async def api_predict(data: PredictionRequest):
 @app.post("/api/send_alert")
 async def api_send_alert(data: AlertRequest):
     try:
-        sid = send_whatsapp_alert(data.Risk_Level, data.phone_number)
+        sid = send_whatsapp_alert(data.Risk_Level, data.phone_number, data.user_type)
         return JSONResponse(content={"message": "WhatsApp Alert Sent", "sid": sid})
+    except Exception as e:
+        return JSONResponse(content={"error": str(e)}, status_code=500)
+
+
+@app.post("/api/chat")
+async def api_chat(request: ChatRequest):
+    """Chat endpoint for patients or doctors.
+
+    mode="advice":
+        - Uses Groq to generate natural-language guidance based on the question
+          and optional risk/disease context.
+
+    mode="plan":
+        - Returns a structured health plan using the existing generator
+          (diet_suggestions, rest_hydration_plan, weekly_checkup_reminders).
+    """
+    try:
+        mode = (request.mode or "advice").lower()
+        user_type = (request.user_type or "patient").lower()
+        risk_level = request.risk_level or "unknown"
+        disease_status = request.disease_status or "unknown"
+
+        if mode == "plan":
+            plan = generate_health_plan(risk_level, disease_status)
+            return JSONResponse(
+                content={
+                    "mode": "plan",
+                    "risk_level": risk_level,
+                    "disease_status": disease_status,
+                    "health_plan": plan,
+                }
+            )
+
+        # Default: advice mode using Groq chat
+        role_description = (
+            "You are answering a pregnant patient in simple, warm language."
+            if user_type == "patient"
+            else "You are answering a healthcare professional, keep language clear but not overly technical."
+        )
+
+        base_context = f"Pregnancy risk level: {risk_level}. Disease status: {disease_status}."  # type: ignore[str-format]
+        user_question = request.question or "Provide general guidance for this case."
+
+        system_prompt = (
+            f"You are a pregnancy health assistant. {role_description} "
+            "You do not diagnose or replace a doctor. "
+            "Give educational, supportive guidance, and always recommend consulting a qualified doctor for decisions."
+        )
+
+        user_prompt = (
+            f"Context: {base_context}\n\n"
+            f"Question: {user_question}\n\n"
+            "Answer in 3–6 short sentences. Avoid medical jargon and do not mention that you are an AI."
+        )
+
+        response = groq_client.chat.completions.create(
+            model="llama-3.1-8b-instant",
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_prompt},
+            ],
+            temperature=0.5,
+            max_tokens=260,
+        )
+
+        answer = response.choices[0].message.content.strip()
+
+        return JSONResponse(
+            content={
+                "mode": "advice",
+                "risk_level": risk_level,
+                "disease_status": disease_status,
+                "answer": answer,
+            }
+        )
+
     except Exception as e:
         return JSONResponse(content={"error": str(e)}, status_code=500)
 # =======================

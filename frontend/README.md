@@ -56,7 +56,7 @@ A modern, responsive React frontend for the AI-powered pregnancy risk assessment
 Create a `.env` file in the frontend directory:
 
 ```env
-REACT_APP_API_URL=http://localhost:8000
+REACT_APP_API_BASE_URL=http://localhost:8000
 ```
 
 ## Project Structure

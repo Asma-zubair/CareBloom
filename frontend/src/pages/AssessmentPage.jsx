@@ -14,8 +14,10 @@ import toast, { Toaster } from "react-hot-toast";
 import Button from "../components/Button";
 import Input from "../components/Input";
 import Card from "../components/Card";
+import { useNavigate } from "react-router-dom";
 
 const AssessmentPage = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     Age: "",
     SystolicBP: "",
@@ -37,6 +39,7 @@ const AssessmentPage = () => {
   });
 
   const [whatsappNumber, setWhatsappNumber] = useState("");
+  const [alertRecipientType, setAlertRecipientType] = useState("patient");
   const [showWhatsAppInstructions, setShowWhatsAppInstructions] =
     useState(false);
   const [result, setResult] = useState(null);
@@ -94,8 +97,14 @@ const AssessmentPage = () => {
 
     setSendingAlert(true);
     try {
-      await pregnancyAPI.sendAlert(result.Risk_Level, whatsappNumber);
-      toast.success(`Alert sent successfully to ${whatsappNumber}!`);
+      await pregnancyAPI.sendAlert(
+        result.Risk_Level,
+        whatsappNumber,
+        alertRecipientType
+      );
+      toast.success(
+        `Alert sent successfully to ${whatsappNumber} (${alertRecipientType})!`
+      );
     } catch (error) {
       console.error("Alert error:", error);
       toast.error("Failed to send alert. Please try again.");
@@ -363,6 +372,34 @@ const AssessmentPage = () => {
                     </h3>
                   </div>
 
+                  <div className="mb-3 flex flex-wrap items-center gap-3 text-xs text-gray-700 dark:text-gray-300">
+                    <span className="font-medium">Send alert to:</span>
+                    <div className="flex rounded-full bg-gray-100 dark:bg-gray-800 p-1">
+                      <button
+                        type="button"
+                        onClick={() => setAlertRecipientType("patient")}
+                        className={`px-3 py-1 rounded-full transition-colors ${
+                          alertRecipientType === "patient"
+                            ? "bg-primary-600 text-white"
+                            : "text-gray-700 dark:text-gray-300"
+                        }`}
+                      >
+                        Patient
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setAlertRecipientType("doctor")}
+                        className={`px-3 py-1 rounded-full transition-colors ${
+                          alertRecipientType === "doctor"
+                            ? "bg-primary-600 text-white"
+                            : "text-gray-700 dark:text-gray-300"
+                        }`}
+                      >
+                        Doctor
+                      </button>
+                    </div>
+                  </div>
+
                   <Input
                     label="WhatsApp Number"
                     name="whatsappNumber"
@@ -441,6 +478,23 @@ const AssessmentPage = () => {
                   >
                     Analyze Risk Level
                   </Button>
+                  {result && (
+                    <div className="mt-3">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="md"
+                        className="w-full"
+                        onClick={() =>
+                          navigate("/assistant", {
+                            state: { result },
+                          })
+                        }
+                      >
+                        Open AI Care Assistant
+                      </Button>
+                    </div>
+                  )}
                 </div>
               </form>
             </Card>
@@ -491,17 +545,7 @@ const AssessmentPage = () => {
                     </div>
                   )}
 
-                  {/* AI Advice */}
-                  {result.AI_Advice && (
-                    <div className="bg-purple-50 dark:bg-purple-900/20 p-4 rounded-lg">
-                      <h3 className="font-semibold text-purple-900 dark:text-purple-100 mb-2">
-                        AI Recommendations
-                      </h3>
-                      <p className="text-purple-700 dark:text-purple-300 text-sm">
-                        {result.AI_Advice}
-                      </p>
-                    </div>
-                  )}
+                  {/* Health plan is now only shown in the AI Care Assistant, not on the assessment page. */}
 
                   {/* Send Alert Button */}
                   <Button

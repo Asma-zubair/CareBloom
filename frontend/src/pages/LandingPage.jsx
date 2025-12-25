@@ -28,19 +28,20 @@ const LandingPage = () => {
     },
     {
       icon: Activity,
-      title: "AI-Based Medical Advice",
+      title: "AI Care Assistant & Plans",
       description:
-        "Powered by Groq API's LLaMA 3.1 8B Instant model to generate empathetic, personalized health advice based on assessment results. Simple guidance tailored to each patient's condition.",
+        "Groq API's LLaMA 3.1 8B Instant model powers an AI Care Assistant where patients and doctors can ask for simple advice or generate structured care plans tied to the latest assessment.",
       color: "bg-green-500",
-      details: "API: Groq LLaMA 3.1 8B | Smart & Empathetic Responses",
+      details:
+        "Advice & Care Plan modes | Patient & Doctor views | Downloadable plans",
     },
     {
       icon: Users,
-      title: "WhatsApp Alert System",
+      title: "Role-Aware WhatsApp Alerts",
       description:
-        "Automated WhatsApp notifications via Twilio API send customized risk alerts to patients or healthcare providers instantly, ensuring timely medical intervention.",
+        "Twilio WhatsApp alerts can be addressed to either the patient or the doctor, with message wording adapted to who receives it and triggered directly from the assessment screen.",
       color: "bg-purple-500",
-      details: "Integration: Twilio WhatsApp API | Real-time Alerts",
+      details: "Integration: Twilio WhatsApp API | Patient & Doctor-specific messages",
     },
   ];
 

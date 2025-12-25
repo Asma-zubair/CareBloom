@@ -201,7 +201,9 @@ const AboutPage = () => {
             </div>
           </motion.div>
 
-          {/* AI-Powered Advice */}
+          {/* (Comprehensive Care Features section removed as requested) */}
+
+          {/* AI Care Assistant & Health Plan */}
           <motion.div
             className="mb-20"
             initial={{ opacity: 0, y: 30 }}
@@ -220,14 +222,34 @@ const AboutPage = () => {
                   <span className="text-5xl">💬</span>
                 </motion.div>
                 <div className="flex-1">
-                  <h2 className="text-2xl font-bold text-green-600 dark:text-green-400 mb-4">
-                    AI-Powered Medical Advice
+                  <h2 className="text-2xl font-bold text-green-600 dark:text-green-400 mb-2">
+                    AI Care Assistant & Personalized Plans
                   </h2>
                   <p className="text-gray-700 dark:text-gray-300 mb-4">
                     Using the <strong>Groq API (LLaMA 3.1 8B Instant)</strong>,
-                    CareBloom generates empathetic, easy-to-understand medical
-                    advice to guide patients with care and confidence.
+                    CareBloom provides an <strong>AI Care Assistant</strong>
+                    where patients or doctors can choose between simple
+                    educational <strong>advice</strong> or a structured
+                    <strong> care plan</strong>.
                   </p>
+                  <ul className="list-disc list-inside text-gray-700 dark:text-gray-300 mb-4 text-sm space-y-1">
+                    <li>
+                      Advice and plans are automatically tailored using the
+                      latest risk and disease analysis from the assessment.
+                    </li>
+                    <li>
+                      Patients and doctors have dedicated modes so language
+                      stays clear for patients and focused for clinicians.
+                    </li>
+                    <li>
+                      Generated care plans include diet suggestions, rest &amp;
+                      hydration tips, and weekly checkup reminders.
+                    </li>
+                    <li>
+                      Care plans can be <strong>downloaded as a text file</strong>
+                      for patients or doctors to review and share.
+                    </li>
+                  </ul>
                   <motion.div
                     className="bg-white dark:bg-gray-800 p-6 rounded-xl border-l-4 border-green-500 shadow-lg"
                     whileHover={{
@@ -237,8 +259,10 @@ const AboutPage = () => {
                     transition={{ type: "spring", stiffness: 300 }}
                   >
                     <p className="text-gray-600 dark:text-gray-400 italic">
-                      "You are doing great! Maintain a balanced diet, stay
-                      hydrated, and consult your doctor regularly."
+                      "Based on your assessment, the assistant suggests a
+                      gentle, easy-to-follow plan so you can focus on healthy
+                      habits, regular rest, and timely checkups with your
+                      doctor."
                     </p>
                   </motion.div>
                 </div>
@@ -268,7 +292,8 @@ const AboutPage = () => {
                   <p className="text-gray-700 dark:text-gray-300 mb-4">
                     CareBloom integrates <strong>Twilio WhatsApp API</strong>{" "}
                     for real-time alerts. The system sends customized WhatsApp
-                    messages based on prediction results.
+                    messages based on prediction results when you choose to
+                    send an alert from the assessment page.
                   </p>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <motion.div
@@ -305,7 +330,8 @@ const AboutPage = () => {
                     >
                       <div className="text-3xl mb-2">3️⃣</div>
                       <p className="text-sm text-gray-600 dark:text-gray-400">
-                        Click <strong>"Send Message"</strong> to receive alerts
+                        Click <strong>"Send WhatsApp Alert"</strong> in the app
+                        to receive alerts
                       </p>
                     </motion.div>
                   </div>
