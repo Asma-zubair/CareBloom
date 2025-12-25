@@ -1,9 +1,9 @@
 import axios from "axios";
 
-// Use env variable if provided (for Vercel/production),
-// otherwise fall back to local backend for development.
+// Use env variable if provided (for local dev or custom setups),
+// otherwise fall back to the deployed Render backend URL.
 const API_BASE_URL =
-  process.env.REACT_APP_API_BASE_URL || "http://localhost:8000";
+  process.env.REACT_APP_API_BASE_URL || "https://carebloom.onrender.com";
 
 const api = axios.create({
   baseURL: API_BASE_URL,
