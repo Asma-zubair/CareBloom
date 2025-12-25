@@ -36,6 +36,25 @@ By combining **predictive AI** with **real-time communication**, CareBloom empow
 
 ---
 
+### 🤖 AI Care Assistant (Patient & Doctor Modes)
+- **Powered by:** Groq API – LLaMA 3.1 8B Instant  
+- **Modes:**
+        - **Advice mode** – short, empathetic educational guidance for patients or clearer wording for doctors.  
+        - **Care plan mode** – generates a structured care plan instead of free‑text advice.  
+- **Context-aware:** Uses the latest assessment result (risk level and Pre‑eclampsia status) to tailor responses.  
+
+---
+
+### 📋 Personalized, Downloadable Care Plans
+- **Generated from:** Risk level (Low/Mid/High) and disease status.  
+- **Includes:**
+        - Diet suggestions  
+        - Rest & hydration guidance  
+        - Weekly checkup reminders  
+- **Downloadable:** Patients or doctors can download the care plan as a text file from the AI Assistant.
+
+---
+
 ## 🩺 Disease Focus – Pre-eclampsia
 
 **Pre-eclampsia** is a serious pregnancy complication that usually occurs **after 20 weeks**, marked by:
@@ -51,16 +70,21 @@ Early detection is crucial, and **CareBloom** helps in identifying Pre-eclampsia
 ## 💬 AI-Based Medical Advice
 
 - **API Used:** Groq API – LLaMA 3.1 8B Instant  
-- **Goal:** Generates short, empathetic, and simple advice for patients based on model outputs.
-
-**Example Advice:**
-> “You are doing great! Maintain a balanced diet, stay hydrated, and consult your doctor regularly for checkups.”
+- **Who it supports:**
+        - **Patients:** Simple, warm, non‑technical language.  
+        - **Doctors:** Clear, focused summaries without heavy jargon.  
+- **Integration:** Fully integrated into the AI Care Assistant page, which reads the latest risk and disease analysis.
 
 ---
 
 ## 💌 WhatsApp Alert Messages
 
-Customized messages are automatically sent to patients or doctors through **Twilio WhatsApp API**, based on the pregnancy risk level.
+Customized messages are sent through **Twilio WhatsApp API** and can be addressed either to the **patient** or to the **doctor**:
+
+- **Patient alerts:** Simple, supportive language encouraging contact with a doctor for high or moderate risk.  
+- **Doctor alerts:** Short clinical summary that a new low / moderate / high‑risk case has been identified and may need closer follow‑up.  
+
+Alerts are always optional and triggered from the assessment screen after a prediction is generated.
 
 ## 📞 WhatsApp Connection Setup
 
@@ -79,8 +103,8 @@ to this number:
 
 On the CareBloom frontend, enter your WhatsApp number (including the country code, e.g., +923XXXXXXXXX).
 
-Click “Send Message”
-Once joined, click the Send Message button to receive alerts directly on WhatsApp according to prediction.
+Click “Send WhatsApp Alert”  
+Once joined, click the **Send WhatsApp Alert** button to receive alerts directly on WhatsApp according to prediction.
 
 ---
 
@@ -97,7 +121,7 @@ Once joined, click the Send Message button to receive alerts directly on WhatsAp
 | **Version Control** | Git & GitHub |
 | **Programming Language** | Python (Backend), JavaScript (Frontend) |
 | **Data Handling** | Pandas, NumPy |
-| **Deployment** | Versel, Render |
+| **Deployment** | Vercel (Frontend), Render (Backend) |
 
 
 ## Workflow Diagram 
