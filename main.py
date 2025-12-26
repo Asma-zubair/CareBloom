@@ -192,6 +192,37 @@ Rules:
         }
 
 
+def _normalize_whatsapp_number(phone_number: str | None) -> str:
+    """Normalize user-provided phone number into Twilio WhatsApp format.
+
+    - Removes spaces and dashes
+    - Ensures a leading '+' on the E.164 number
+    - Ensures it is prefixed with 'whatsapp:'
+    - Falls back to TO_NUMBER if nothing valid is provided
+    """
+    if not phone_number:
+        return TO_NUMBER
+
+    cleaned = phone_number.strip().replace(" ", "").replace("-", "")
+
+    # If already in full Twilio format, just return
+    if cleaned.startswith("whatsapp:+"):
+        return cleaned
+
+    # If it already has whatsapp: but missing '+', keep prefix and fix body
+    if cleaned.startswith("whatsapp:"):
+        body = cleaned.split(":", 1)[1]
+        if not body.startswith("+"):
+            body = "+" + body
+        return f"whatsapp:{body}"
+
+    # At this point we only have the bare number (+923..., 923..., 0300..., etc.)
+    if not cleaned.startswith("+"):
+        cleaned = "+" + cleaned
+
+    return f"whatsapp:{cleaned}"
+
+
 # =======================
 # WhatsApp Alert Function (Twilio)
 # =======================
@@ -200,7 +231,7 @@ def send_whatsapp_alert(risk_level: str, phone_number: str = None, user_type: st
         print("⚠ Twilio client not configured. Alert not sent.")
         return None
 
-    target_number = f"whatsapp:{phone_number}" if phone_number else TO_NUMBER
+    target_number = _normalize_whatsapp_number(phone_number)
     recipient = (user_type or "patient").lower()
 
     print(f"📱 Sending WhatsApp alert for {risk_level} to {target_number} as {recipient}")
@@ -319,6 +350,14 @@ async def api_predict(data: PredictionRequest):
 async def api_send_alert(data: AlertRequest):
     try:
         sid = send_whatsapp_alert(data.Risk_Level, data.phone_number, data.user_type)
+
+        # If Twilio client is not configured or sending failed, sid will be None
+        if not sid:
+            return JSONResponse(
+                content={"error": "Failed to send WhatsApp alert"},
+                status_code=500,
+            )
+
         return JSONResponse(content={"message": "WhatsApp Alert Sent", "sid": sid})
     except Exception as e:
         return JSONResponse(content={"error": str(e)}, status_code=500)
@@ -363,10 +402,21 @@ async def api_chat(request: ChatRequest):
         base_context = f"Pregnancy risk level: {risk_level}. Disease status: {disease_status}."  # type: ignore[str-format]
         user_question = request.question or "Provide general guidance for this case."
 
+        context_usage_rules = (
+            "You may be given a pregnancy risk level and disease status from the user's latest assessment. "
+            "Use this personal context ONLY when the question is clearly about this specific pregnant person's condition, "
+            "their assessment result, or what they should do next. "
+            "If the question is general (for example: 'What is preeclampsia?' or 'In pregnancy, what is normal blood pressure?'), "
+            "answer in a general, educational way and do NOT mention any personal risk level or disease status. "
+            "If risk_level is 'unknown' or disease_status is 'N/A', do not assume anything about their condition; "
+            "answer in a general way without pretending you know their exact risk or diagnosis."
+        )
+
         system_prompt = (
             f"You are a pregnancy health assistant. {role_description} "
             "You do not diagnose or replace a doctor. "
-            "Give educational, supportive guidance, and always recommend consulting a qualified doctor for decisions."
+            "Give educational, supportive guidance, and always recommend consulting a qualified doctor for decisions. "
+            f"{context_usage_rules}"
         )
 
         user_prompt = (
