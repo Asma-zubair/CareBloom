@@ -127,25 +127,29 @@ Once joined, click the **Send WhatsApp Alert** button to receive alerts directly
 ## Workflow Diagram 
 
 ```
-👩‍🍼 User Input (Age, BP, Heart Rate, etc.) + Phone Number
+👩‍🍼 User Input (Age, BP, Heart Rate, etc.)
         ↓
-📊 Model A (Pregnancy Risk Prediction - XGBoost)
+📡 FastAPI Backend (/api/predict)
         ↓
-🔍 Output: Low / Medium / High Risk
+📊 Model A – Pregnancy Risk Prediction (XGBoost)
+        ↓
+🔍 Output: Risk_Level = Low / Mid / High
         ↓
 ➡️ If High → Activate Model B
         ↓
-🧠 Model B (Pre-eclampsia Detection - Random Forest)
+🧠 Model B – Pre-eclampsia Detection (Random Forest)
         ↓
-📈 Output: Disease Risk (Low / Medium / High) + Probability (%)
+📈 Output: Disease_Status (Low / Mid / High) + Disease_Probability (%)
         ↓
-💬 Groq API (LLaMA 3.1 8B) → Generates Medical Advice
+🧾 Groq API (LLaMA 3.1 8B) → Structured Health Plan
         ↓
-📱 "Send Message" Button Clicked (Optional by User)
+🌸 React Dashboard → Shows Risk, Disease Status & Care Plan
         ↓
-📨 WhatsApp Alert Sent to Entered Number (Based on Model A Output)
+💬 AI Care Assistant (/api/chat) → Advice or Care Plan (Patient / Doctor)
         ↓
-🌸 Result Dashboard (React Frontend)
+📱 Optional: "Send WhatsApp Alert" (/api/send_alert)
+        ↓
+📨 Twilio WhatsApp → Patient / Doctor Alert
 ```
 
 ---
